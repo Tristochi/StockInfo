@@ -28,8 +28,13 @@ class RealtimeDB:
         link = self.url+ "search_history.json"
         json_data = json.dumps(last_search, indent=4).encode("UTF-8")
         header = {"content-type": "application/json; charset=UTF-8"}
-        r = requests.put(link, data = json_data, headers = header)
+        r = requests.patch(link, data = json_data, headers = header)
         print(r.content)
 
-
+    def get_search_history(self):
+        link = self.url + "search_history.json"
+        r = requests.get(link)
+        
+        history = r.text.strip("\"")
+        return history
         

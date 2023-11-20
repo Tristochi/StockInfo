@@ -14,6 +14,9 @@
     </div>
     <div id="result-container">
     </div>
+    <div id="history-container">
+        
+    </div>
 </body>
 <script>
     var xhr = null;
@@ -23,6 +26,28 @@
             xhr = new XMLHttpRequest();
         }
         return xhr;
+    };
+
+    window.onload = function(){
+        loadHistory();
+    };
+
+    function loadHistoryCallback() {
+        if(xhr.readyState == 4 && xhr.status == 200){
+            console.log("Load response received.");
+            historyDiv = document.getElementById('history-container');
+            historyDiv.innerHTML = xhr.responseText;
+        }
+    };
+
+    function loadHistory() {
+        console.log("Loading user search history...");
+        xhr = getXmlHttpRequestObject();
+        xhr.onreadystatechange = loadHistoryCallback;
+
+        //Asynchronous request
+        xhr.open("GET", "http://localhost:6969/", true);
+        xhr.send(null);
     };
 
     function searchTickerCallback(){

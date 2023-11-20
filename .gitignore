@@ -9,3 +9,7 @@ venv.bak/
 
 #API Keys
 backend/key_variables.py
+
+#DB Files
+backend/ticker_list.json
+backend/ticker_list.csv
