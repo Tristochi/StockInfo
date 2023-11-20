@@ -1,0 +1,11 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+#API Keys
+backend/key_variables.py

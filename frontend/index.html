@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StocksFirst</title>
+</head>
+<body>
+    <h1>StocksFirst</h1>
+    <div>
+        <h3>Enter a stock to search: </h3>
+        <input type="text" id="ticker-search">
+        <button onclick="searchTicker()">Submit</button>
+    </div>
+    <div id="result-container">
+    </div>
+</body>
+<script>
+    var xhr = null;
+
+    getXmlHttpRequestObject = function() {
+        if(!xhr){
+            xhr = new XMLHttpRequest();
+        }
+        return xhr;
+    };
+
+    function searchTickerCallback(){
+        if(xhr.readyState == 4 && xhr.status == 200) {
+            console.log("Search response received.");
+            resultDiv = document.getElementById('result-container');
+            resultDiv.innerHTML = xhr.responseText;
+        }
+    }
+
+    function searchTicker() {
+        tickerToSearch = document.getElementById('ticker-search').value;
+        if(!tickerToSearch){
+            console.log("No ticker entered.");
+            return;
+        }
+        console.log("Searching ticker " + tickerToSearch);
+        xhr = getXmlHttpRequestObject();
+        xhr.onreadystatechange = searchTickerCallback;
+
+        //Asynchronous request
+        xhr.open("POST", "http://localhost:6969/", true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify({"data": tickerToSearch}));
+    }
+</script>
+</html>
