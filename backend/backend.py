@@ -19,10 +19,11 @@ CORS(StocksFirst)
 
 def data():
     print("Data endpoint reached.")
-    print(API_KEY)
     print(request.method)
 
     if request.method == "GET":
+        url = 'https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey='+API_KEY
+        
         some_data = theDB.get_search_history()
         return flask.Response(response = some_data, status=200)
     if request.method == "POST":
@@ -33,10 +34,14 @@ def data():
         data = api_call.json()
 
         #Data is not recorded for the weekends so careful not to break the site
-        if today in data["Time Series (Daily)"]:
-            current_data = data["Time Series (Daily)"][today]
-        else:
-            current_data = data["Time Series (Daily)"][yesterday]
+
+        days = list(data["Time Series (Daily)"])
+        current_data = data["Time Series (Daily)"][days[0]]
+
+        #if today in data["Time Series (Daily)"]:
+            #current_data = data["Time Series (Daily)"][today]
+        #else:
+            #current_data = data["Time Series (Daily)"][yesterday]
 
         title = theDB.get_co_name(ticker)
         last_search = {ticker: {title: {"Open": current_data["1. open"], 

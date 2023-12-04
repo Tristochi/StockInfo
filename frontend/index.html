@@ -3,23 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>StocksFirst</title>
 </head>
 <body>
     <h1>StocksFirst</h1>
-    <div>
-        <h3>Enter a stock to search: </h3>
-        <input type="text" id="ticker-search">
-        <button onclick="searchTicker()">Submit</button>
-    </div>
-    <div id="result-container">
-    </div>
-    <div id="history-container">
-        
+    <div class="container">
+        <div class="search-div">
+            <input type="text" id="ticker-search" placeholder="Search Ticker Name"> 
+            <button onclick="searchTicker()">Submit</button>
+        </div>
+        <div class="tile-container">
+            <div class="row-one">
+                <div class="tile" id="result-container">
+                    <h3>AAPL</h3>
+                    <p>Price: </p>
+                    <p>Change Percentage: </p>
+                    <p>Volume: </p>   
+                </div>
+                <div class="tile" id="best-performer-2">
+                    <h3>AAPL</h3>
+                    <p>Price: </p>
+                    <p>Change Percentage: </p>
+                    <p>Volume: </p>   
+                </div>
+            </div>
+            <div class="row-two">
+                <div class="tile" id="best-performer-3">
+                    <h3>AAPL</h3>
+                    <p>Price: </p>
+                    <p>Change Percentage: </p>
+                    <p>Volume: </p>    
+                </div>
+                <div class="tile" id="best-performer-4">
+                    <h3>AAPL</h3>
+                    <p>Price: </p>
+                    <p>Change Percentage: </p>
+                    <p>Volume: </p>   
+                </div>
+            </div>
     </div>
 </body>
 <script>
     var xhr = null;
+
+    //This adds an event listener to all of my tiles
+    var selectedTile = new Array();
+    const tileList = document.querySelectorAll(".tile");
+    tileList.forEach(function(tile) {
+
+        tile.addEventListener("click", function() {
+            if(tile.style.backgroundColor == 'lightblue') {
+                tile.style.backgroundColor = 'white';
+            } else {
+                //Deselect any other tile.
+                tileList.forEach(function(tile) {
+                    tile.style.backgroundColor = 'white';
+                })
+                //select current tile
+                tile.style.backgroundColor = 'lightblue';
+            }
+        })
+    });
+
+    document.getElementById("ticker-search").addEventListener("keyup", function(event) {
+        if(event.keyCode == 13) {
+            searchTicker()
+        }
+    });
 
     getXmlHttpRequestObject = function() {
         if(!xhr){
@@ -51,10 +102,11 @@
     };
 
     function searchTickerCallback(){
+        console.log("We are in the callback");
         if(xhr.readyState == 4 && xhr.status == 200) {
             console.log("Search response received.");
             resultDiv = document.getElementById('result-container');
-            resultDiv.innerHTML = xhr.responseText;
+            resultDiv.innerHTML = `<p>${xhr.responseText}</p>`;
         }
     }
 
