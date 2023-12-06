@@ -40,19 +40,27 @@ class RealtimeDB:
         history = r.text.strip("\"")
         return history
 
-    async def get_top_performer_data(self):
-        today = datetime.today().strftime('%Y-%m-%d')
-        link = self.url + "top_performer/"+ today + ".json" 
-        print(link)
+    def get_top_performer_data(self):
+        #Data is never for current data, but previous close date which is yesterday COB
+        last_close_date = (datetime.today() - timedelta(days = 1)).strftime('%Y-%m-%d')
+        link = self.url + "top_performers/"+ last_close_date + ".json" 
+        header = { 'User-Agent': '(Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/12.0)',
+                   'referer': self.url}
+        
         r = requests.get(link)
         content = r.text
-        print(content)
+        
+        
         if content == "null":
-            
             for i in range(1,5):
                 date = (datetime.today() - timedelta(days = i)).strftime('%Y-%m-%d')
-                link = self.url + "top_performer/"+ today + ".json" 
-                r = requests.get(link)
+                link = self.url + "top_performers/"+ date + ".json" 
+                r = requests.get(link, headers=header)
+                if r.text != "null":
+                    return r.text
+            return None 
+        
+        return content
 
 
 

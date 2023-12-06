@@ -26,9 +26,10 @@ def data():
 
         #Check DB if top performer data is there
         #   Send data back to landing page
-        if theDB.get_top_performer_data():
-            print("There is data")
-        else:
+        content = theDB.get_top_performer_data()
+        if not content:
+            #Get it from the API and write it to the database
+            print("Doing API call")
             api_call = requests.get(url)
             data = api_call.json()
             
@@ -39,13 +40,13 @@ def data():
                 top_gainers.append(tmp[el])
                 
             
-            tmp_dic = dict()
-            tmp_dic[last_updated] = top_gainers
+            content = dict()
+            content[last_updated] = top_gainers
             
-            theDB.write_top_performer_data(tmp_dic)
+            theDB.write_top_performer_data(content)
 
         
-        return flask.Response(response = tmp_dic, status=200)
+        return flask.Response(response = content, status=200)
     
     if request.method == "POST":
         ticker = request.get_json()["data"].upper()

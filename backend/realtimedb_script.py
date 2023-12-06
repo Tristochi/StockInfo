@@ -10,6 +10,11 @@ import asyncio
 #print((r.content))
 
 x = RealtimeDB()
-async def get_result():
-    result = await x.get_top_performer_data()
-    print(result)
+content = x.get_top_performer_data()
+
+if content:
+    print(json.dumps(content, indent=4))
+    print(type(content))
+    print(content[0])
+else:
+    print("Nope")
