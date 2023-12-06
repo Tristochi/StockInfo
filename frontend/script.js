@@ -37,21 +37,50 @@ getXmlHttpRequestObject = function () {
 };
 
 window.onload = function () {
-    loadHistory();
+    //loadHistory();
+    loadTopPerformers();
 };
 
-function loadHistoryCallback() {
+
+function loadTPCallBack() {
     if (xhr.readyState == 4 && xhr.status == 200) {
         console.log("Load response received.");
-        historyDiv = document.getElementById('history-container');
-        historyDiv.innerHTML = xhr.responseText;
+        //historyDiv = document.getElementById('history-container');
+        //historyDiv.innerHTML = xhr.responseText;
+        console.log(`Data returned: ${xhr.responseText}`);
+        
+        //Turn the string back into JSON
+        const content = JSON.parse(xhr.responseText);
+        console.log(content[0].ticker);
+
+        var tileOne = document.getElementById('best-performer-1');
+        tileOne.innerHTML = `<h3>${content[0].ticker}</h3>
+                            <p>Price: $${content[0].price}</p>
+                            <p>Change Percentage: ${content[0].change_percentage}</p>
+                            <p>Volume: ${content[0].volume}</p>`;
+        
+        var tileTwo = document.getElementById('best-performer-2');
+        tileTwo.innerHTML = `<h3>${content[1].ticker}</h3>
+                            <p>Price: $${content[1].price}</p>
+                            <p>Change Percentage: ${content[1].change_percentage}</p>
+                            <p>Volume: ${content[1].volume}</p>`;  
+        var tileThree = document.getElementById('best-performer-3');
+        tileThree.innerHTML = `<h3>${content[2].ticker}</h3>
+                            <p>Price: $${content[2].price}</p>
+                            <p>Change Percentage: ${content[2].change_percentage}</p>
+                            <p>Volume: ${content[2].volume}</p>`; 
+        var tileFour = document.getElementById('best-performer-4');
+        tileFour.innerHTML = `<h3>${content[3].ticker}</h3>
+                            <p>Price: $${content[3].price}</p>
+                            <p>Change Percentage: ${content[3].change_percentage}</p>
+                            <p>Volume: ${content[3].volume}</p>`;      
     }
 };
 
-function loadHistory() {
+function loadTopPerformers() {
     console.log("Loading user search history...");
     xhr = getXmlHttpRequestObject();
-    xhr.onreadystatechange = loadHistoryCallback;
+    xhr.onreadystatechange = loadTPCallBack;
 
     //Asynchronous request
     xhr.open("GET", "http://localhost:6969/", true);
