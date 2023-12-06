@@ -1,5 +1,7 @@
-import requests 
+import requests
 import json 
+from datetime import datetime, timedelta
+import asyncio
 
 class RealtimeDB:
     """A class for handling interactions with the Realtime DB"""
@@ -37,4 +39,37 @@ class RealtimeDB:
         
         history = r.text.strip("\"")
         return history
+
+    async def get_top_performer_data(self):
+        today = datetime.today().strftime('%Y-%m-%d')
+        link = self.url + "top_performer/"+ today + ".json" 
+        print(link)
+        r = requests.get(link)
+        content = r.text
+        print(content)
+        if content == "null":
+            
+            for i in range(1,5):
+                date = (datetime.today() - timedelta(days = i)).strftime('%Y-%m-%d')
+                link = self.url + "top_performer/"+ today + ".json" 
+                r = requests.get(link)
+
+
+
+    
+    def write_top_performer_data(self, top_performers):
+        #Check if we have data in the database already for today, or last few days
+        # up to 4 to account for weekend use of app.
+        print("Data for put request: ")
+        print(json.dumps(top_performers, indent=4))
+        link = self.url + "top_performers.json"
+        json_data = json.dumps(top_performers, indent=4)
+        header = {"content-type": "application/json; charset=UTF-8"}
+
+        #r = requests.put(link, data=json_data, headers = header)
+        r = requests.patch(link, data=json_data,headers=header)
+        print("Response: ")
+        print(r.content)
+
+
         

@@ -23,9 +23,30 @@ def data():
 
     if request.method == "GET":
         url = 'https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey='+API_KEY
+
+        #Check DB if top performer data is there
+        #   Send data back to landing page
+        if theDB.get_top_performer_data():
+            print("There is data")
+        else:
+            api_call = requests.get(url)
+            data = api_call.json()
+            
+            last_updated = data["last_updated"][0:10]
+            tmp = list(data["top_gainers"])
+            top_gainers = []
+            for el in range(0, 4):
+                top_gainers.append(tmp[el])
+                
+            
+            tmp_dic = dict()
+            tmp_dic[last_updated] = top_gainers
+            
+            theDB.write_top_performer_data(tmp_dic)
+
         
-        some_data = theDB.get_search_history()
-        return flask.Response(response = some_data, status=200)
+        return flask.Response(response = tmp_dic, status=200)
+    
     if request.method == "POST":
         ticker = request.get_json()["data"].upper()
         print(ticker)
