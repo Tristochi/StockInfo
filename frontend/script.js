@@ -1,7 +1,24 @@
-var xhr = null;
+import * as Chart from 'https:///cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js';
 
+var xhr = null;
 //This adds an event listener to all of my tiles
 var selectedTile = new Array();
+
+const xValues = [50,60,70,80,90,100,110,120,130,140,150];
+const yValues = [7,8,8,9,9,9,10,11,14,14,15];
+
+const myChart = new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor:"rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: yValues
+    }]
+  },
+  
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     const tileList = document.querySelectorAll(".tile");
