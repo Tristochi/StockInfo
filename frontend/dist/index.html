@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/index.4d663569.css">
+    <script src="/index.f5c48570.js" defer=""></script>
+    <title>StocksFirst</title>
+</head>
+<body>
+    <h1>StocksFirst</h1>
+    <div class="container">
+        <div class="search-div">
+            <input type="text" id="ticker-search" placeholder="Search Ticker Name"> 
+            <button id="submit-button" onclick="searchTicker()">Submit</button>
+        </div>
+        <div class="tile-container">
+            <div class="row-one">
+                <div class="tile" id="best-performer-1">
+                    <h3 id="ticker-one">AAPL</h3>
+                    <p id="price-one">Price: </p>
+                    <p id="change-percentage-one">Change Percentage: </p>
+                    <p id="volume-one">Volume: </p>   
+                </div>
+                <div class="tile" id="best-performer-2">
+                    <h3 id="ticker-two">AAPL</h3>
+                    <p id="price-two">Price: </p>
+                    <p id="change-percentage-two">Change Percentage: </p>
+                    <p id="volume-two">Volume: </p>    
+                </div>
+            </div>
+            <div class="row-two">
+                <div class="tile" id="best-performer-3">
+                    <h3 id="ticker-three">AAPL</h3>
+                    <p id="price-three">Price: </p>
+                    <p id="change-percentage-three">Change Percentage: </p>
+                    <p id="volume-three">Volume: </p>      
+                </div>
+                <div class="tile" id="best-performer-4">
+                    <h3 id="ticker-four">AAPL</h3>
+                    <p id="price-four">Price: </p>
+                    <p id="change-percentage-four">Change Percentage: </p>
+                    <p id="volume-four">Volume: </p>     
+                </div>
+            </div>
+
+            <canvas id="ticker-graph" style="width: 100%; max-width: 700px"></canvas>
+    </div>
+</div></body>
+</html>

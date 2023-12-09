@@ -33,12 +33,33 @@ class RealtimeDB:
         r = requests.patch(link, data = json_data, headers = header)
         print(r.content)
 
-    def get_search_history(self):
-        link = self.url + "search_history.json"
-        r = requests.get(link)
+    def get_search_history(self, ticker):
+        #link = self.url + "search_history.json"
+        #last_close_date = (datetime.today() - timedelta(days = 1)).strftime('%Y-%m-%d')
         
-        history = r.text.strip("\"")
-        return history
+
+        #check if ticker exists
+        link = self.url + "search_history/" + ticker + ".json"
+        r = requests.get(link)
+        content = r.text 
+        if content == "null":
+            return None 
+        
+        return content 
+
+    def get_graph_data(self, some_data):
+        data = json.loads(some_data)
+        co_name = list(data.keys())[0]
+        date_list = list(data[co_name])
+        close_list = []
+
+        for val in range(len(date_list)):
+            close_list.append(data[co_name][date_list[val]]["Close"])
+        
+        #Combine two lists into new dic using dict comprehension
+        response = {date_list[i] : close_list[i] for i in range(len(date_list))}
+        return response
+
 
     def get_top_performer_data(self):
         #Data is never for current data, but previous close date which is yesterday COB
@@ -61,6 +82,8 @@ class RealtimeDB:
             return None 
         
         return content
+
+    
 
 
 

@@ -10,11 +10,24 @@ import asyncio
 #print((r.content))
 
 x = RealtimeDB()
-content = x.get_top_performer_data()
+content = x.get_search_history('AAP')
 
-if content:
-    print(json.dumps(content, indent=4))
-    print(type(content))
-    print(content[0])
+if not content:
+    print("TIcker doesn't exist")
 else:
-    print("Nope")
+    print(json.dumps(json.loads(content), indent=4))
+
+data = json.loads(content)
+co_name = list(data.keys())[0]
+date_list = list(data[co_name])
+close_list = []
+for val in range(len(date_list)):
+    close_list.append(data[co_name][date_list[val]]["Close"])
+
+#print(date_list)
+#print(close_list)
+
+#create new dictionary through list comprehension that would be sent back to the frontend
+response = {date_list[i]: close_list[i] for i in range(len(date_list))}
+print(response)
+

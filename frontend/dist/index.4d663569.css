@@ -1,0 +1,78 @@
+@media (width >= 800px) {
+  .container {
+    max-width: 760px;
+  }
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  text-align: center;
+}
+
+.container {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2.5rem;
+}
+
+.search-div {
+  margin: 0 auto;
+  padding: .75rem;
+}
+
+.tile-container {
+  margin: .4rem;
+}
+
+.row-one {
+  justify-content: space-between;
+  display: flex;
+}
+
+.tile {
+  border: 1px solid #e0e4e9;
+  border-radius: 2px;
+}
+
+.row-one .tile {
+  background-color: #fff;
+  flex: 1;
+  width: 35%;
+  margin: .4rem;
+  padding: 0 .5rem;
+}
+
+.row-two {
+  justify-content: space-between;
+  display: flex;
+}
+
+.row-two .tile {
+  background-color: #fff;
+  flex: 1;
+  width: 35%;
+  margin: .4rem;
+  padding: 0 .5rem;
+}
+
+#ticker-search {
+  width: 100%;
+  display: block;
+}
+
+input {
+  margin: 0;
+}
+
+button {
+  margin-top: .25rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+/*# sourceMappingURL=index.4d663569.css.map */

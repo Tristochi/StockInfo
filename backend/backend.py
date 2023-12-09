@@ -50,30 +50,46 @@ def data():
     
     if request.method == "POST":
         ticker = request.get_json()["data"].upper()
-        print(ticker)
-        url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ticker+'&apikey='+API_KEY
-        api_call = requests.get(url)
-        data = api_call.json()
+        #print(ticker)
 
-        #Data is not recorded for the weekends so careful not to break the site
+        #Check the DB if we have data already, and if there's anything current.
+        content = theDB.get_search_history(ticker)
+        if not content:
+            url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ticker+'&apikey='+API_KEY
+            api_call = requests.get(url)
+            data = api_call.json()
 
-        days = list(data["Time Series (Daily)"])
-        current_data = data["Time Series (Daily)"][days[0]]
+            #Data is not recorded for the weekends so careful not to break the site
 
-        #if today in data["Time Series (Daily)"]:
-            #current_data = data["Time Series (Daily)"][today]
-        #else:
-            #current_data = data["Time Series (Daily)"][yesterday]
+            days = list(data["Time Series (Daily)"])
+            current_data = data["Time Series (Daily)"][days[0]]
 
-        title = theDB.get_co_name(ticker)
-        last_search = {ticker: {title: {"Open": current_data["1. open"], 
+            title = theDB.get_co_name(ticker)
+            last_search = {ticker: {title: {"Open": current_data["1. open"], 
+                                            "High": current_data["2. high"],
+                                            "Low": current_data["3. low"],
+                                            "Close": current_data["4. close"],
+                                            "Volume": current_data["5. volume"]}}}
+            daily_values = []
+            ticker_node = {}
+
+            #Gets last seven days of data for given stock. 
+            for i in range(0,7):
+                current_data = data["Time Series (Daily)"][days[i]]
+                ticker_node[days[i]]= {"Open": current_data["1. open"],
                                         "High": current_data["2. high"],
                                         "Low": current_data["3. low"],
                                         "Close": current_data["4. close"],
-                                        "Volume": current_data["5. volume"]}}}
-        
-        theDB.write_search_history(last_search)
-        return flask.Response(response= title + " (" + ticker + ")" + ": " + json.dumps(current_data, indent = 4),status=200)
+                                        "Volume": current_data["5. volume"]
+                }
+            last_search = {ticker: {title: ticker_node}}
+            print("Printing daily values:")
+            theDB.write_search_history(last_search)
+            content = theDB.get_search_history(ticker)
+
+        graph_values = theDB.get_graph_data(content)
+        print(json.dumps(graph_values, indent=4))
+        return flask.Response(response=json.dumps(graph_values,indent=4),status=200)
 
 
 if __name__ == "__main__":
