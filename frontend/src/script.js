@@ -4,9 +4,8 @@ import Chart from 'chart.js/auto'
 var xhr = null;
 //This adds an event listener to all of my tiles
 var selectedTile = new Array();
-
 const tickerGraph = document.getElementById('ticker-graph');
-
+var tickerToSearch = "";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -23,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 //select current tile
                 tile.style.backgroundColor = 'lightblue';
+                //do the searchticker thing and empty search bar just in case
+                document.getElementById('ticker-search').value = "";
+                tickerToSearch = tile.firstElementChild.textContent;
+                searchTicker(tickerToSearch);
             }
         })
     });
@@ -60,23 +63,23 @@ function loadTPCallBack() {
         console.log(content[0].ticker);
 
         var tileOne = document.getElementById('best-performer-1');
-        tileOne.innerHTML = `<h3>${content[0].ticker}</h3>
+        tileOne.innerHTML = `<h3 id="ticker-one">${content[0].ticker}</h3>
                             <p>Price: $${content[0].price}</p>
                             <p>Change Percentage: ${content[0].change_percentage}</p>
                             <p>Volume: ${content[0].volume}</p>`;
         
         var tileTwo = document.getElementById('best-performer-2');
-        tileTwo.innerHTML = `<h3>${content[1].ticker}</h3>
+        tileTwo.innerHTML = `<h3 id="ticker-two">${content[1].ticker}</h3>
                             <p>Price: $${content[1].price}</p>
                             <p>Change Percentage: ${content[1].change_percentage}</p>
                             <p>Volume: ${content[1].volume}</p>`;  
         var tileThree = document.getElementById('best-performer-3');
-        tileThree.innerHTML = `<h3>${content[2].ticker}</h3>
+        tileThree.innerHTML = `<h3 id="ticker-three">${content[2].ticker}</h3>
                             <p>Price: $${content[2].price}</p>
                             <p>Change Percentage: ${content[2].change_percentage}</p>
                             <p>Volume: ${content[2].volume}</p>`; 
         var tileFour = document.getElementById('best-performer-4');
-        tileFour.innerHTML = `<h3>${content[3].ticker}</h3>
+        tileFour.innerHTML = `<h3 id="ticker-four">${content[3].ticker}</h3>
                             <p>Price: $${content[3].price}</p>
                             <p>Change Percentage: ${content[3].change_percentage}</p>
                             <p>Volume: ${content[3].volume}</p>`;      
@@ -100,38 +103,51 @@ function searchTickerCallback() {
         
         //The response text here is the graph data currently
         const some_data = JSON.parse(xhr.responseText);
-        console.log(some_data);
+        //console.log(some_data);
         var xValues = new Array();
         var yValues = new Array();
 
         for (const key in some_data) {
             if(some_data.hasOwnProperty(key)){
-                console.log(`${key} : ${some_data[key]}`);
+                //console.log(`${key} : ${some_data[key]}`);
                 xValues.push(key);
                 yValues.push(some_data[key]);
             }
         }
 
-        new Chart(tickerGraph, {
+        var myChart = Chart.getChart(tickerGraph);
+        if(myChart != undefined){
+            myChart.destroy();
+        }
+
+         myChart = new Chart(tickerGraph, {
             type: "line",
             data: {
               labels: xValues,
               datasets: [{
+                label: `${tickerToSearch} Close Prices`,
                 backgroundColor:"rgba(0,0,255,1.0)",
                 borderColor: "rgba(0,0,255,0.1)",
                 data: yValues
               }]
             }
           });
+          console.log("Drawing graph!");
+          myChart.update();
     }
 }
 
-function searchTicker() {
-    tickerToSearch = document.getElementById('ticker-search').value;
-    if (!tickerToSearch) {
-        console.log("No ticker entered.");
-        return;
+function searchTicker(tileTicker) {
+    
+    if (!tickerToSearch) { 
+        if(!tileTicker){
+            console.log("No ticker entered.");
+            return;
+        }else{
+            tickerToSearch = tileTicker;
+        }
     }
+
     console.log("Searching ticker " + tickerToSearch);
     xhr = getXmlHttpRequestObject();
     xhr.onreadystatechange = searchTickerCallback;
@@ -145,5 +161,14 @@ function searchTicker() {
 const submitButton = document.getElementById('submit-button');
 
 submitButton.onclick = function(){
-    searchTicker();
+    //We should set all tiles to white when button is clicked.
+    const tileList = document.querySelectorAll(".tile");
+    tileList.forEach(function(tile){
+        if(tile.style.backgroundColor == 'lightblue'){
+            tile.style.backgroundColor = 'white';
+        }
+    });
+
+    tickerToSearch = document.getElementById('ticker-search').value;
+    searchTicker(tickerToSearch);
 };

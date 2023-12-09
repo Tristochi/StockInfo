@@ -27,7 +27,8 @@ def data():
         #Check DB if top performer data is there
         #   Send data back to landing page
         content = theDB.get_top_performer_data()
-        if not content:
+        print(content)
+        if content == None:
             #Get it from the API and write it to the database
             print("Doing API call")
             api_call = requests.get(url)
@@ -42,14 +43,16 @@ def data():
             
             content = dict()
             content[last_updated] = top_gainers
-            
+            print(content)
             theDB.write_top_performer_data(content)
 
-        
+        print(content)
         return flask.Response(response = content, status=200)
     
     if request.method == "POST":
         ticker = request.get_json()["data"].upper()
+        if '+' in ticker:
+            ticker = ticker.replace('+', '')
         #print(ticker)
 
         #Check the DB if we have data already, and if there's anything current.

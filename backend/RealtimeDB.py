@@ -70,15 +70,15 @@ class RealtimeDB:
         
         r = requests.get(link)
         content = r.text
-        
+        print(content)
         
         if content == "null":
-            for i in range(1,5):
-                date = (datetime.today() - timedelta(days = i)).strftime('%Y-%m-%d')
-                link = self.url + "top_performers/"+ date + ".json" 
-                r = requests.get(link, headers=header)
-                if r.text != "null":
-                    return r.text
+            #for i in range(1,5):
+                #date = (datetime.today() - timedelta(days = i)).strftime('%Y-%m-%d')
+                #link = self.url + "top_performers/"+ date + ".json" 
+                #r = requests.get(link, headers=header)
+                #if r.text != "null":
+                    #return r.text
             return None 
         
         return content
