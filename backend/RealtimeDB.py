@@ -52,12 +52,26 @@ class RealtimeDB:
         co_name = list(data.keys())[0]
         date_list = list(data[co_name])
         close_list = []
-
+        close_avg = 0
+        
         for val in range(len(date_list)):
             close_list.append(data[co_name][date_list[val]]["Close"])
+
+        close_list.sort()
+        close_min = close_list[0]
+        close_max = close_list[-1]
+
+        for price in close_list:
+            close_avg += float(price)
+        
+        close_avg = close_avg / float(len(close_list))
         
         #Combine two lists into new dic using dict comprehension
         response = {date_list[i] : close_list[i] for i in range(len(date_list))}
+        response["Average"] = close_avg 
+        response["Max"] = close_max
+        response["Min"] = close_min
+        
         return response
 
 
@@ -101,6 +115,8 @@ class RealtimeDB:
         r = requests.patch(link, data=json_data,headers=header)
         print("Response: ")
         print(r.content)
+    
+    
 
 
         

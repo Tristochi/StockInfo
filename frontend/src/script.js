@@ -106,15 +106,26 @@ function searchTickerCallback() {
         //console.log(some_data);
         var xValues = new Array();
         var yValues = new Array();
+        var aggData = {};
 
+        //Separate aggregate data from graph values
         for (const key in some_data) {
             if(some_data.hasOwnProperty(key)){
                 //console.log(`${key} : ${some_data[key]}`);
-                xValues.push(key);
-                yValues.push(some_data[key]);
+                if(key == "Average"){
+                    aggData["Average"] = some_data[key];
+                }else if(key == "Max"){
+                    aggData["Max"] = some_data[key];
+                }else if(key == "Min"){
+                    aggData["Min"] = some_data[key];
+                }else {
+                    xValues.push(key);
+                    yValues.push(some_data[key]);
+                }
             }
         }
 
+        //Create graph using values
         var myChart = Chart.getChart(tickerGraph);
         if(myChart != undefined){
             myChart.destroy();
@@ -134,6 +145,14 @@ function searchTickerCallback() {
           });
           console.log("Drawing graph!");
           myChart.update();
+
+          //Do something with the aggregate data
+          var extraInfo = document.getElementById('aggregate-data');
+          console.log(aggData);
+          extraInfo.innerHTML = `<h4>Aggregate Data: </h4>
+                                    <p>Min: $${aggData.Min}</p>
+                                    <p>Max: $${aggData.Max}</p>
+                                    <p>Average: $${aggData.Average}</p>`;
     }
 }
 

@@ -2,6 +2,7 @@ import requests
 import json 
 from RealtimeDB import RealtimeDB
 import asyncio
+import key_variables
 #url = "https://stocksfirst-3f87d-default-rtdb.firebaseio.com/ticker_list.json"
 #json_file = open("ticker_list.json")
 #data = json.load(json_file)
@@ -11,23 +12,9 @@ import asyncio
 
 x = RealtimeDB()
 content = x.get_search_history('AAP')
+API_KEY = key_variables.API_KEY
 
-if not content:
-    print("TIcker doesn't exist")
-else:
-    print(json.dumps(json.loads(content), indent=4))
+url = 'https://alphavantageapi.co/timeseries/analytics?SYMBOLS=IBM&RANGE=full&INTERVAL=DAILY&OHLC=close&CALCULATIONS=MIN,MAX,MEDIAN,MEAN&apikey='+API_KEY
 
-data = json.loads(content)
-co_name = list(data.keys())[0]
-date_list = list(data[co_name])
-close_list = []
-for val in range(len(date_list)):
-    close_list.append(data[co_name][date_list[val]]["Close"])
-
-#print(date_list)
-#print(close_list)
-
-#create new dictionary through list comprehension that would be sent back to the frontend
-response = {date_list[i]: close_list[i] for i in range(len(date_list))}
-print(response)
-
+r = requests.get(url)
+print(json.dumps(r.text, indent=4))
